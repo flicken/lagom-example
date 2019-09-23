@@ -8,16 +8,16 @@ val macwire = "com.softwaremill.macwire" %% "macros" % "2.3.0" % "provided"
 val scalaTest = "org.scalatest" %% "scalatest" % "3.0.4" % Test
 
 lazy val `swingtime` = (project in file("."))
-  .aggregate(`swingtime-api`, `swingtime-impl`, `swingtime-stream-api`, `swingtime-stream-impl`)
+  .aggregate(`users-api`, `users-impl`, `projects-api`, `projects-impl`)
 
-lazy val `swingtime-api` = (project in file("swingtime-api"))
+lazy val `users-api` = (project in file("users-api"))
   .settings(
     libraryDependencies ++= Seq(
       lagomScaladslApi
     )
   )
 
-lazy val `swingtime-impl` = (project in file("swingtime-impl"))
+lazy val `users-impl` = (project in file("users-impl"))
   .enablePlugins(LagomScala)
   .settings(
     libraryDependencies ++= Seq(
@@ -28,23 +28,25 @@ lazy val `swingtime-impl` = (project in file("swingtime-impl"))
       scalaTest
     )
   )
-  .settings(lagomForkedTestSettings)
-  .dependsOn(`swingtime-api`)
+  .dependsOn(`users-api`)
 
-lazy val `swingtime-stream-api` = (project in file("swingtime-stream-api"))
+
+lazy val `projects-api` = (project in file("projects-api"))
   .settings(
     libraryDependencies ++= Seq(
       lagomScaladslApi
     )
   )
 
-lazy val `swingtime-stream-impl` = (project in file("swingtime-stream-impl"))
+lazy val `projects-impl` = (project in file("projects-impl"))
   .enablePlugins(LagomScala)
   .settings(
     libraryDependencies ++= Seq(
+      lagomScaladslPersistenceCassandra,
+      lagomScaladslKafkaBroker,
       lagomScaladslTestKit,
       macwire,
       scalaTest
     )
   )
-  .dependsOn(`swingtime-stream-api`, `swingtime-api`)
+  .dependsOn(`projects-api`)
