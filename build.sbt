@@ -10,6 +10,10 @@ val scalaTest = "org.scalatest" %% "scalatest" % "3.0.4" % Test
 lazy val `swingtime` = (project in file("."))
   .aggregate(`users-api`, `users-impl`, `projects-api`, `projects-impl`)
 
+val pac4jVersion = "3.6.1"
+val lagomPac4j = "org.pac4j" %% "lagom-pac4j" % "2.0.0"
+val pac4jHttp = "org.pac4j" % "pac4j-http" % pac4jVersion
+
 lazy val `users-api` = (project in file("users-api"))
   .settings(
     libraryDependencies ++= Seq(
@@ -24,6 +28,8 @@ lazy val `users-impl` = (project in file("users-impl"))
       lagomScaladslPersistenceCassandra,
       lagomScaladslKafkaBroker,
       lagomScaladslTestKit,
+      pac4jHttp,
+      lagomPac4j,
       macwire,
       scalaTest
     )
@@ -45,8 +51,10 @@ lazy val `projects-impl` = (project in file("projects-impl"))
       lagomScaladslPersistenceCassandra,
       lagomScaladslKafkaBroker,
       lagomScaladslTestKit,
+      pac4jHttp,
+      lagomPac4j,
       macwire,
       scalaTest
     )
   )
-  .dependsOn(`projects-api`)
+  .dependsOn(`projects-api`, `users-api`)

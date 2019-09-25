@@ -16,6 +16,7 @@ trait UsersService extends Service {
   def getUser(UsersId: String): ServiceCall[NotUsed, UserMessage]
   def updateUser(UsersId: String): ServiceCall[UserMessage, UserMessage]
   def deleteUser(UsersId: String): ServiceCall[NotUsed, UserMessage]
+  def auth(): ServiceCall[NotUsed, RestProfileMessage]
 
   override final def descriptor: Descriptor = {
     import Service._
@@ -23,6 +24,7 @@ trait UsersService extends Service {
     named("users")
       .withCalls(
         restCall(Method.POST, "/api/users/", addUser _),
+        restCall(Method.GET, "/api/authenticate", auth _),
         restCall(Method.GET, "/api/users/:userId", getUser _),
         restCall(Method.PATCH, "/api/users/:userId", updateUser _),
         restCall(Method.DELETE, "/api/users/:userId", deleteUser _),
@@ -52,4 +54,13 @@ case class AddUser(name: String)
 
 object AddUser {
   implicit val format: Format[AddUser] = Json.format[AddUser]
+}
+
+case class RestProfileMessage(id: String, attributes: RestProfileAttributes)
+object RestProfileMessage {
+  implicit val format: Format[RestProfileMessage] = Json.format[RestProfileMessage]
+}
+case class RestProfileAttributes(name: String, roles: Seq[String])
+object RestProfileAttributes {
+  implicit val format: Format[RestProfileAttributes] = Json.format[RestProfileAttributes]
 }
